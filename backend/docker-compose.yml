@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ecommerce_app
+      POSTGRES_PASSWORD: ecommerce_app_pass
+      POSTGRES_DB: ecommerce_app_db
+    networks:
+      - app_network
+    ports:
+      - "5432:5432"
+    volumes:  
+      - postgres_data:/var/lib/postgresql/data
+
+  app_backend:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgresql://ecommerce_app:ecommerce_app_pass@db:5432/ecommerce_app_db
+      JWT_SECRET_KEY: 8f42a73e2c5f4c1b9d6e8a0f3b7c9d1e4a5f8b2c6d9e0a3f7b4c1d8e5a2f9b6
+    volumes:
+      - ./migrations:/app/migrations
+    depends_on:
+      - db
+    networks:
+      - app_network
+
+  system_tests:
+    build: 
+      dockerfile: system_tests/Dockerfile
+    depends_on:
+      - app_backend
+    environment:
+      - DATABASE_URL=postgresql://ecommerce_app:ecommerce_app_pass@db:5432/ecommerce_app_db
+      - JWT_SECRET_KEY=8f42a73e2c5f4c1b9d6e8a0f3b7c9d1e4a5f8b2c6d9e0a3f7b4c1d8e5a2f9b6
+    networks:
+      - app_network
+
+
+volumes:
+  postgres_data:
+
+
+networks:
+  app_network:
+    driver: bridge
