@@ -2,37 +2,42 @@
 
 A full-stack loyalty rewards platform enabling businesses to create and manage reward programs while allowing customers to earn and redeem points across different businesses.
 
-```
-Basic endpoints overview:
-```
-Authentication:
-POST /auth/register    - Register new user
-POST /auth/login      - Login user
-POST /auth/logout     - Logout user
-GET    /auth/me       - Get current user details
+## API Endpoints
 
-Businesses:
-GET    /businesses    - List all businesses
-PUT    /businesses    - Update business details
+### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/register` | Register new user |
+| POST | `/auth/login` | Login user |
+| POST | `/auth/logout` | Logout user |
+| GET  | `/auth/me` | Get current user details |
 
-Rewards:
-POST   /rewards              - Create new reward
-DELETE /rewards/{reward_id}  - Delete reward
-PUT    /rewards/{reward_id}  - Update reward
-GET    /rewards/{reward_id}  - Get reward details
+### Businesses
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/businesses` | List all businesses |
+| PUT | `/businesses` | Update business details |
 
-Enrollments:
-GET    /enrollments/me               - Get user enrollments
-POST   /enrollments/businesses/{id}  - Enroll in business for a user
-DELETE /enrollments/businesses/{id}  - Cancel enrollment for a user
-POST   /enrollments/add_points      - Add points
-POST   /enrollments/redeem_reward   - Redeem reward
-```
+### Rewards
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/rewards` | Create new reward |
+| DELETE | `/rewards/{reward_id}` | Delete reward |
+| PUT | `/rewards/{reward_id}` | Update reward |
+| GET | `/rewards/{reward_id}` | Get reward details |
+
+### Enrollments
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/enrollments/me` | Get user enrollments |
+| POST | `/enrollments/businesses/{id}` | Enroll in business for a user |
+| DELETE | `/enrollments/businesses/{id}` | Cancel enrollment for a user |
+| POST | `/enrollments/add_points` | Add points |
+| POST | `/enrollments/redeem_reward` | Redeem reward |
 
 ## Backend
 
 ### Tech Stack
-
 - **Python 3.11**: Core programming language
 - **Flask**: Web framework
 - **PostgreSQL**: Database
@@ -42,7 +47,6 @@ POST   /enrollments/redeem_reward   - Redeem reward
 - **Pydantic**: Data validation and settings management
 
 ### Prerequisites
-
 - Docker and Docker Compose
 - Python 3.11
 - pip (Python package installer)
@@ -50,7 +54,6 @@ POST   /enrollments/redeem_reward   - Redeem reward
 ### Local Development Setup
 
 #### Setting Up Virtual Environment
-
 ```bash
 # Navigate to backend directory
 cd backend
@@ -69,7 +72,6 @@ pip install -r requirements.txt
 ```
 
 #### Running with Docker
-
 ```bash
 # Navigate to backend directory
 cd backend
@@ -82,8 +84,7 @@ docker-compose down
 ```
 
 #### Database Migrations
-
-After you have the app_backend container running, you can running the folowig:
+After the app_backend container is running, you can manage database migrations:
 
 ```bash
 # Navigate to backend directory
@@ -103,21 +104,15 @@ docker-compose exec app_backend flask db downgrade
 ```
 
 #### Running System Tests
-
-In this project, we use `pytest` to run system tests.
-System tests are used to externally test our backend system from outside the container.
-The tests sends requests to the running container, as if it was our mobile app, and it tests the API endpoints for important flows for the app.
-
+This project uses `pytest` for system testing. System tests externally validate the backend system by sending requests to the running container, simulating mobile app interactions and testing API endpoints for critical application flows.
 
 ```bash
 # Navigate to backend directory
 cd backend
 
+# Start the system tests container
 docker-compose up --build -d system_tests
-```
 
-To run a specific test after the container is running:
-
-```bash
+# Run a specific test
 docker-compose run system_tests python -m pytest -v -k <test_name>
 ```
