@@ -83,6 +83,10 @@ def test_upsert_business(client):
     response = client.register(user_data)
     assert response.status_code == 200
     
+    # Verify no business details exists using /me endpoint
+    response = client.get_current_business_details()
+    assert response.status_code == 404
+    
     # Create business details
     business_details = UpsertBusinessRequest(
         business_name="Test Business",
@@ -93,6 +97,13 @@ def test_upsert_business(client):
     )
     response = client.upsert_business(business_details)
     assert response.status_code == 200
+    
+    # Verify business details using /me endpoint
+    response = client.get_current_business_details()
+    assert response.status_code == 200
+    business_data = response.json()
+    assert business_data["details"]["business_name"] == "Test Business"
+    assert business_data["details"]["description"] == "Test Description"
     
     # List businesses and verify
     response = client.list_businesses()
@@ -252,3 +263,5 @@ def test_redeem_reward(client):
     response_data = response.json()
     assert response_data["success"] is True
     assert Decimal(response_data["new_points_balance"]) == Decimal(50.0)  # 150 - 100
+
+

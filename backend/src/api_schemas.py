@@ -127,6 +127,6 @@ class RedeemRewardResponse(BaseModel):
     new_points_balance: Decimal
 
 
-class ListBusinessesResponse(BaseModel):
+class BusinessWithRewards(BaseModel):
     details: BusinessDetailsModel
     rewards: List[RewardModel]

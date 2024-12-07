@@ -7,7 +7,7 @@ from src.api_schemas import (
     UserModel,
     EnrollmentDetailsResponse,
     GetBusinessEnrollmentResponse,
-    ListBusinessesResponse,
+    BusinessWithRewards,
     UpsertBusinessRequest,
     UpdateRewardRequest,
 )
@@ -24,7 +24,7 @@ def list_businesses():
     print(f"Found {len(businesses)} businesses")
     result = []
     for business in businesses:
-        response = ListBusinessesResponse(
+        response = BusinessWithRewards(
             details=BusinessDetailsModel(
                 id=business.id,
                 business_name=business.business_name,
@@ -45,6 +45,36 @@ def list_businesses():
         result.append(response.model_dump())
     
     return jsonify(result)
+
+@bp.route('/me', methods=['GET'])
+@require_business_owner
+def get_current_business_details():
+    print(f"Fetching current business details for user_id: {g.user.id}")
+    business = BusinessDetails.query.filter_by(user_id=g.user.id).first()
+    
+    if not business:
+        return jsonify({"error": "No business details found for this user"}), 404
+    
+    response = BusinessWithRewards(
+            details=BusinessDetailsModel(
+                id=business.id,
+                business_name=business.business_name,
+                description=business.description,
+                email_address=business.email_address,
+                address=business.address,
+                phone_number=business.phone_number
+            ),
+            rewards=[RewardModel(
+                id=reward.id,
+                name=reward.name,
+                business_id=reward.business_id,
+                usage_count=reward.usage_count,
+                description=reward.description,
+                required_points=reward.required_points,
+            ) for reward in business.rewards]
+        )
+    
+    return jsonify(response.model_dump())
 
 @bp.route('', methods=['PUT'])
 @require_business_owner
