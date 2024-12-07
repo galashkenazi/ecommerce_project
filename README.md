@@ -1,6 +1,6 @@
-# Loyalty Rewards System
+# E-Commerce Appications Project
 
-A full-stack loyalty rewards platform enabling businesses to create and manage reward programs while allowing customers to earn and redeem points across different businesses.
+A full-stack loyalty rewards platform enabling small businesses to create and manage reward programs while allowing customers to earn and redeem points across different businesses.
 
 ## API Endpoints
 
@@ -16,6 +16,7 @@ A full-stack loyalty rewards platform enabling businesses to create and manage r
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/businesses` | List all businesses |
+| GET | `/businesses/me` | Get current user's business details |
 | PUT | `/businesses` | Update business details |
 
 ### Rewards
@@ -115,4 +116,49 @@ docker-compose up --build -d system_tests
 
 # Run a specific test
 docker-compose run system_tests python -m pytest -v -k <test_name>
+```
+
+## Mobile App
+
+### Tech Stack
+- **Kotlin**: Primary programming language
+- **Jetpack Compose**: Modern UI toolkit for native Android UI
+- **Material3**: Design system for consistent and modern UI components
+- **Ktor Client**: HTTP client for API communication
+- **Kotlinx Serialization**: JSON serialization/deserialization
+- **DataStore**: Data persistence for token storage
+- **Android Studio**: Official IDE for Android development
+
+### Key Features
+- **State Management**: Centralized state handling through `AppState` using Kotlin Flows and Compose State
+- **Navigation**: Type-safe navigation using Jetpack Navigation Compose
+- **API Communication**: Ktor client with kotlinx.serialization for type-safe API calls
+- **UI Components**: Reusable components following Material3 design guidelines
+- **Preview Support**: Design-time previews for UI components
+- **Error Handling**: Wrapped responses using Resource sealed class
+
+### Development Setup
+1. Install Android Studio (Latest stable version)
+2. Clone the repository
+3. Open the project in Android Studio
+4. Configure the API endpoint in `ApiService.kt`
+5. Run on an emulator or physical device
+
+### UI Patterns
+The app follows a consistent pattern for screen development:
+- Each screen is split into two components:
+  - A stateful screen component that connects to AppState
+  - A stateless content component for pure UI rendering
+- Preview support for all UI components
+- Material3 theming throughout the app
+- Common navigation patterns and layouts
+
+
+### Building and Running
+1. Connect an Android device or start an emulator
+2. Make sure the backend server is running and accessible
+3. Update the `BASE_URL` in `ApiService.kt` to point to your server
+4. Click "Run" in Android Studio or use:
+```bash
+./gradlew installDebug
 ```

@@ -122,3 +122,9 @@ class AppBackendRequester:
             headers=self._headers(),
             json=redeem_data.model_dump(mode="json"),
         )
+
+    def get_current_business_details(self):
+        return requests.get(
+            f"{self.base_url}/businesses/me",
+            headers=self._headers()
+        )
