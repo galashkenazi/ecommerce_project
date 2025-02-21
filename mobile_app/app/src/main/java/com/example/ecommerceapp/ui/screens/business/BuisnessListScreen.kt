@@ -3,6 +3,7 @@ package com.example.ecommerceapp.ui.screens.business
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -102,10 +103,29 @@ private fun BusinessCard(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Text(
-                text = business.details.businessName,
-                style = MaterialTheme.typography.titleLarge
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = business.details.businessName,
+                    style = MaterialTheme.typography.titleLarge
+                )
+                FilledTonalButton(
+                    onClick = onEnroll,
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    )
+                ) {
+                    Text(
+                        "Enroll",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            }
+            
             business.details.description?.let {
                 Text(
                     text = it,
@@ -118,12 +138,6 @@ private fun BusinessCard(
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(top = 8.dp)
                 )
-            }
-            Button(
-                onClick = onEnroll,
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text("Enroll")
             }
         }
     }

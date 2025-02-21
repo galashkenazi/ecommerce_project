@@ -152,6 +152,18 @@ The platform includes a recommendation system that suggests similar businesses b
 - Handles edge cases (no enrollments, single business)
 - Has comprehensive system tests validating the functionality
 
+#### Business Recommendation System
+The platform features a personalized recommendation engine that suggests new businesses and rewards to users based on their enrollment history. The system:
+
+- Analyzes user's business category preferences based on their enrollments
+- Identifies top 3 most frequently visited categories
+- Recommends businesses from similar categories that the user hasn't enrolled in yet
+- Includes relevant rewards from recommended businesses
+- Filters out businesses without active rewards
+- Handles various edge cases (no enrollments, no matching businesses)
+
+The recommendation algorithm ensures users discover new businesses similar to ones they already enjoy, while also highlighting available rewards. This creates a network effect where users are encouraged to explore and engage with more businesses in the platform.
+
 ### Development Setup
 1. Install Android Studio (Latest stable version)
 2. Clone the repository

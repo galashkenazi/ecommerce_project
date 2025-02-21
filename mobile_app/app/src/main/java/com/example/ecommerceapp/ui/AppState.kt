@@ -88,7 +88,7 @@ open class AppState(context: Context) : ViewModel() {
                 val response = apiService.login(LoginRequest(username, password))
                 tokenManager.saveToken(response.accessToken)
             } catch (e: Exception) {
-                // Handle error
+                Log.e("Login", "$e")
             }
         }
     }
@@ -121,7 +121,7 @@ open class AppState(context: Context) : ViewModel() {
                 _currentUser.value = Resource.Loading()
                 isBusinessOwner = false
             } catch (e: Exception) {
-                // Handle error
+                Log.e("Logout", "$e")
             }
         }
     }
@@ -159,10 +159,10 @@ open class AppState(context: Context) : ViewModel() {
         viewModelScope.launch {
             try {
                 apiService.upsertBusinessDetails(details)
-                loadMyBusiness() // Refresh business details after update
-                loadBusinesses() // Also refresh the businesses list
+                loadMyBusiness()
+                loadBusinesses()
             } catch (e: Exception) {
-                // Handle error
+                Log.e("UpsertBusiness", "$e")
             }
         }
     }
@@ -175,7 +175,7 @@ open class AppState(context: Context) : ViewModel() {
                 loadMyBusiness()
                 loadBusinesses()
             } catch (e: Exception) {
-                // Handle error
+                Log.e("CreateReward", "$e")
             }
         }
     }
@@ -187,7 +187,7 @@ open class AppState(context: Context) : ViewModel() {
                 loadMyBusiness()
                 loadBusinesses()
             } catch (e: Exception) {
-                // Handle error
+                Log.e("DeleteReward", "$e")
             }
         }
     }
@@ -199,7 +199,7 @@ open class AppState(context: Context) : ViewModel() {
                 loadMyBusiness()
                 loadBusinesses()
             } catch (e: Exception) {
-                // Handle error
+                Log.e("UpdateReward", "$e")
             }
         }
     }
@@ -222,9 +222,9 @@ open class AppState(context: Context) : ViewModel() {
             try {
                 apiService.enrollToBusiness(businessId)
                 loadEnrollments()
-                loadBusinesses() // Refresh to update enrollment status
+                loadBusinesses()
             } catch (e: Exception) {
-                // Handle error
+                Log.e("EnrollToBusiness", "$e")
             }
         }
     }
@@ -234,9 +234,9 @@ open class AppState(context: Context) : ViewModel() {
             try {
                 apiService.cancelEnrollment(businessId)
                 loadEnrollments()
-                loadBusinesses() // Refresh to update enrollment status
+                loadBusinesses()
             } catch (e: Exception) {
-                // Handle error
+                Log.e("CancelEnrollment", "$e")
             }
         }
     }
@@ -245,9 +245,9 @@ open class AppState(context: Context) : ViewModel() {
         viewModelScope.launch {
             try {
                 apiService.addPoints(userId, points)
-                loadEnrollments() // Refresh points after update
+                loadEnrollments()
             } catch (e: Exception) {
-                // Handle error
+                Log.e("AddPoints", "$e")
             }
         }
     }
@@ -256,9 +256,9 @@ open class AppState(context: Context) : ViewModel() {
         viewModelScope.launch {
             try {
                 apiService.redeemReward(userId, rewardId)
-                loadEnrollments() // Refresh points after redemption
+                loadEnrollments()
             } catch (e: Exception) {
-                // Handle error
+                Log.e("RedeemReward", "$e")
             }
         }
     }

@@ -342,4 +342,101 @@ def test_similar_businesses(client):
     assert len(business2["similar_businesses"]) == 1
     assert business2["similar_businesses"][0]["business_name"] == "Business 1"
 
+def test_business_recommendations(client):
+    # Create first business with category "Restaurant"
+    business1_username = f"business_user1_{uuid.uuid4()}"
+    business1_user = CreateUserRequest(
+        username=business1_username,
+        password="password123",
+        email_address=f"{business1_username}@test.com",
+        is_business_owner=True
+    )
+    response = client.register(business1_user)
+    assert response.status_code == 200
+    
+    business1_details = UpsertBusinessRequest(
+        business_name="Restaurant A",
+        description="Restaurant",
+        email_address="business1@test.com"
+    )
+    response = client.upsert_business(business1_details)
+    assert response.status_code == 200
+    
+    # Create reward for first business
+    reward1_details = CreateRewardRequest(
+        name="Free Drink",
+        description="Free drink with meal",
+        required_points=Decimal(50.0),
+    )
+    response = client.create_reward(reward1_details)
+    assert response.status_code == 200
+
+    # Create second business with same category
+    client.token = None
+    business2_username = f"business_user2_{uuid.uuid4()}"
+    business2_user = CreateUserRequest(
+        username=business2_username,
+        password="password123",
+        email_address=f"{business2_username}@test.com",
+        is_business_owner=True
+    )
+    response = client.register(business2_user)
+    assert response.status_code == 200
+    
+    business2_details = UpsertBusinessRequest(
+        business_name="Restaurant B",
+        description="Restaurant",
+        email_address="business2@test.com"
+    )
+    response = client.upsert_business(business2_details)
+    assert response.status_code == 200
+    
+    # Create reward for second business
+    reward2_details = CreateRewardRequest(
+        name="Free Dessert",
+        description="Free dessert with meal",
+        required_points=Decimal(75.0),
+    )
+    response = client.create_reward(reward2_details)
+    assert response.status_code == 200
+
+    # Create customer and enroll in first business
+    client.token = None
+    customer_username = f"customer_{uuid.uuid4()}"
+    customer_data = CreateUserRequest(
+        username=customer_username,
+        password="password123",
+        email_address=f"{customer_username}@test.com",
+        is_business_owner=False
+    )
+    response = client.register(customer_data)
+    assert response.status_code == 200
+
+    # Get first business ID
+    response = client.list_businesses()
+    assert response.status_code == 200
+    business1 = next(b for b in response.json() if b["details"]["business_name"] == "Restaurant A")
+    business1_id = business1["details"]["id"]
+
+    # Enroll in first business
+    response = client.enroll_to_business(business1_id)
+    assert response.status_code == 200
+
+    # Get user details and verify recommendations
+    response = client.get_current_user_details()
+    assert response.status_code == 200
+    user_data = response.json()
+    
+    # Verify recommendations exist
+    assert "recommendations" in user_data
+    recommendations = user_data["recommendations"]
+    assert len(recommendations) > 0
+    
+    # Verify recommendation structure
+    recommendation = recommendations[0]
+    assert "business_name" in recommendation
+    assert "reward" in recommendation
+    assert recommendation["business_name"] == "Restaurant B"  # Should recommend the other restaurant
+    assert recommendation["reward"]["name"] == "Free Dessert"
+
 
