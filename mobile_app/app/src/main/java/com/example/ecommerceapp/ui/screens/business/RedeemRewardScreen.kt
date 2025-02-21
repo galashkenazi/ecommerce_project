@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.ecommerceapp.data.api.models.Reward
 import com.example.ecommerceapp.ui.AppState
+import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 import com.example.ecommerceapp.util.Resource
 import java.math.BigDecimal
 
@@ -154,7 +155,7 @@ fun RedeemRewardScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun RedeemRewardScreenPreview() {
-    MaterialTheme {
+    EcommerceAppTheme {
         RedeemRewardScreenContent(
             businessName = "Sample Business",
             rewards = listOf(

@@ -17,6 +17,7 @@ import com.example.ecommerceapp.data.api.models.BusinessDetails
 import com.example.ecommerceapp.data.api.models.Enrollment
 import com.example.ecommerceapp.data.api.models.UserEnrollment
 import com.example.ecommerceapp.ui.AppState
+import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 import com.example.ecommerceapp.util.Resource
 import java.math.BigDecimal
 
@@ -166,7 +167,7 @@ private fun AddPointsDialog(
 @Preview(showBackground = true)
 @Composable
 fun AddPointsScreenPreview() {
-    MaterialTheme {
+    EcommerceAppTheme {
         AddPointsScreenContent(
             enrollments = listOf(
                 UserEnrollment(

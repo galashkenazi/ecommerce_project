@@ -9,6 +9,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.ecommerceapp.ui.AppState
+import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 
 
 @Composable
@@ -85,7 +86,7 @@ fun LoginScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    MaterialTheme {
+    EcommerceAppTheme {
         LoginScreenContent()
     }
 }

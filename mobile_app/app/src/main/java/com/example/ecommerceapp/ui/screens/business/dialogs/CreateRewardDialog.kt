@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.ecommerceapp.data.api.models.CreateRewardRequest
+import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 
 @Composable
 fun CreateRewardDialog(
@@ -93,7 +94,7 @@ fun CreateRewardDialog(
 @Preview(showBackground = true)
 @Composable
 fun CreateRewardDialogPreview() {
-    MaterialTheme {
+    EcommerceAppTheme {
         CreateRewardDialog(
             onDismiss = {},
             onCreate = {}

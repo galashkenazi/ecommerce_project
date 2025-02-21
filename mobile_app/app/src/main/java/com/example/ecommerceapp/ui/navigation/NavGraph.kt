@@ -64,6 +64,9 @@ fun AppNavigation(appState: AppState) {
                 appState = appState,
                 onNavigateToEnrollments = {
                     navController.navigate(NavRoutes.Enrollments)
+                },
+                onNavigateToProfile = {
+                    navController.navigate(NavRoutes.CustomerProfile)
                 }
             )
         }
@@ -82,6 +85,9 @@ fun AppNavigation(appState: AppState) {
                 appState = appState,
                 onNavigateToEnrollments = {
                     navController.navigate(NavRoutes.Enrollments)
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
                 }
             )
         }
