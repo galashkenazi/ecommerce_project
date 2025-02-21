@@ -58,7 +58,8 @@ data class Reward(
 @Serializable
 data class BusinessDetailsWithRewards(
     val details: BusinessDetails,
-    val rewards: List<Reward>
+    val rewards: List<Reward>,
+    val similarBusinesses: List<BusinessDetails> = emptyList()
 )
 
 @Serializable

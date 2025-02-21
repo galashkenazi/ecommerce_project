@@ -12,6 +12,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=['POST'])
 def register():
+    print(f"Registering user")
     request_data = CreateUserRequest.model_validate(request.get_json())
     
     if User.query.filter_by(username=request_data.username).first():
@@ -32,6 +33,7 @@ def register():
 
 @bp.route('/login', methods=['POST'])
 def login():
+    print(f"Logging in user")
     request_data = LoginUserRequest.model_validate(request.get_json())
     user = User.query.filter_by(username=request_data.username).first()
     
@@ -43,6 +45,7 @@ def login():
 
 @bp.route('/logout', methods=['POST'])
 def logout():
+    print(f"Logging out user")
     auth_header = request.headers.get('Authorization')
     if not auth_header or not auth_header.startswith('Bearer '):
         return jsonify({'error': 'Missing or invalid token'}), 401
@@ -61,6 +64,7 @@ def logout():
 @bp.route('/me', methods=['GET'])
 @require_auth
 def get_current_user_details():
+    print(f"Getting current user details")
     user = User.query.filter_by(id=g.user.id).first()
     return UserModel(
         id=user.id,

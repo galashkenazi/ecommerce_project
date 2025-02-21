@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.ui.screens.register
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.example.ecommerceapp.ui.AppState
@@ -102,6 +103,9 @@ fun RegisterScreenContent(
 
         Button(
             onClick = {
+                Log.d("RegisterScreen", "Register button clicked")
+                Log.d("RegisterScreen",
+                    "Username: $username, Email: $email, IsBusinessOwner: $isBusinessOwner")
                 onRegister(username, password, email, isBusinessOwner)
             },
             modifier = Modifier.fillMaxWidth()

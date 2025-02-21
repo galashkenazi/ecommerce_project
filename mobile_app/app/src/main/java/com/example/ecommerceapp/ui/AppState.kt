@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.ecommerceapp.data.api.ApiService
 import com.example.ecommerceapp.data.api.models.BusinessDetails
@@ -95,6 +96,8 @@ open class AppState(context: Context) : ViewModel() {
     fun register(username: String, password: String, email: String, isBusinessOwner: Boolean) {
         viewModelScope.launch {
             try {
+                Log.d("AppState",
+                    "Registering user: $username, email: $email, isBusinessOwner: $isBusinessOwner")
                 val response = apiService.register(RegisterRequest(
                     username = username,
                     password = password,
@@ -103,7 +106,7 @@ open class AppState(context: Context) : ViewModel() {
                 ))
                 tokenManager.saveToken(response.accessToken)
             } catch (e: Exception) {
-                // Handle error
+                Log.e("AppState", "Failed registering user: $e")
             }
         }
     }

@@ -118,6 +118,14 @@ docker-compose up --build -d system_tests
 docker-compose run system_tests python -m pytest -v -k <test_name>
 ```
 
+#### System Tests
+The project includes comprehensive system tests that validate critical flows including:
+- User authentication and registration
+- Business management
+- Reward creation and redemption
+- Points management
+- Business similarity recommendations
+
 ## Mobile App
 
 ### Tech Stack
@@ -136,6 +144,13 @@ docker-compose run system_tests python -m pytest -v -k <test_name>
 - **UI Components**: Reusable components following Material3 design guidelines
 - **Preview Support**: Design-time previews for UI components
 - **Error Handling**: Wrapped responses using Resource sealed class
+
+#### Business Similarity Algorithm
+The platform includes a recommendation system that suggests similar businesses based on user enrollment patterns. It uses the Jaccard similarity coefficient to measure the overlap between businesses' customer bases. The algorithm:
+- Compares user enrollment sets between businesses
+- Returns up to 3 most similar businesses for each business
+- Handles edge cases (no enrollments, single business)
+- Has comprehensive system tests validating the functionality
 
 ### Development Setup
 1. Install Android Studio (Latest stable version)

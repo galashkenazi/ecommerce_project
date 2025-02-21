@@ -17,8 +17,8 @@ class ApiService(private var token: String? = null) {
         // This is currently points to a locally running server. To find the correct IP for the
         // server, make sure your mobile app is connected to the same wifi as your computer is
         // running on. Then, running "ifconfig | grep 192" on mac and linnux, or use ipconfig
-        // instead for windows. Add the matching IP here (leave the 5000 port as is).
-        private const val BASE_URL = "http://192.168.1.15:5000"
+        // instead for windows. Add the matching IP here (leave the 5013 port as is).
+        private const val BASE_URL = "http://192.168.223.100:5013"
     }
 
     // Auth endpoints

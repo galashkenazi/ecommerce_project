@@ -264,4 +264,82 @@ def test_redeem_reward(client):
     assert response_data["success"] is True
     assert Decimal(response_data["new_points_balance"]) == Decimal(50.0)  # 150 - 100
 
+def test_similar_businesses(client):
+    # Create first business
+    business1_username = f"business_user1_{uuid.uuid4()}"
+    business1_user = CreateUserRequest(
+        username=business1_username,
+        password="password123",
+        email_address=f"{business1_username}@test.com",
+        is_business_owner=True
+    )
+    response = client.register(business1_user)
+    assert response.status_code == 200
+    
+    business1_details = UpsertBusinessRequest(
+        business_name="Business 1",
+        email_address="business1@test.com"
+    )
+    response = client.upsert_business(business1_details)
+    assert response.status_code == 200
+    
+    # Create second business
+    client.token = None
+    business2_username = f"business_user2_{uuid.uuid4()}"
+    business2_user = CreateUserRequest(
+        username=business2_username,
+        password="password123",
+        email_address=f"{business2_username}@test.com",
+        is_business_owner=True
+    )
+    response = client.register(business2_user)
+    assert response.status_code == 200
+    
+    business2_details = UpsertBusinessRequest(
+        business_name="Business 2",
+        email_address="business2@test.com"
+    )
+    response = client.upsert_business(business2_details)
+    assert response.status_code == 200
+    
+    # Get business IDs
+    response = client.list_businesses()
+    assert response.status_code == 200
+    businesses = response.json()
+    business1_id = next(b["details"]["id"] for b in businesses if b["details"]["business_name"] == "Business 1")
+    business2_id = next(b["details"]["id"] for b in businesses if b["details"]["business_name"] == "Business 2")
+    
+    # Create and enroll customers
+    # Customer 1 enrolls in both businesses
+    client.token = None
+    customer1_username = f"customer1_{uuid.uuid4()}"
+    customer1_data = CreateUserRequest(
+        username=customer1_username,
+        password="password123",
+        email_address=f"{customer1_username}@test.com",
+        is_business_owner=False
+    )
+    response = client.register(customer1_data)
+    assert response.status_code == 200
+    
+    response = client.enroll_to_business(business1_id)
+    assert response.status_code == 200
+    response = client.enroll_to_business(business2_id)
+    assert response.status_code == 200
+    
+    # Check similar businesses
+    response = client.list_businesses()
+    assert response.status_code == 200
+    businesses = response.json()
+    
+    business1 = next(b for b in businesses if b["details"]["business_name"] == "Business 1")
+    business2 = next(b for b in businesses if b["details"]["business_name"] == "Business 2")
+    
+    # Verify each business lists the other as similar
+    assert len(business1["similar_businesses"]) == 1
+    assert business1["similar_businesses"][0]["business_name"] == "Business 2"
+    
+    assert len(business2["similar_businesses"]) == 1
+    assert business2["similar_businesses"][0]["business_name"] == "Business 1"
+
 
