@@ -3,6 +3,7 @@ package com.example.ecommerceapp.ui.screens.business
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,11 +14,14 @@ import com.example.ecommerceapp.data.api.models.BusinessDetailsWithRewards
 import com.example.ecommerceapp.data.api.models.BusinessDetails
 import com.example.ecommerceapp.util.Resource
 import com.example.ecommerceapp.ui.AppState
+import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
+import androidx.compose.material.icons.filled.Person
 
 @Composable
 fun BusinessListScreen(
     appState: AppState,
-    onNavigateToEnrollments: () -> Unit
+    onNavigateToEnrollments: () -> Unit,
+    onNavigateToProfile: () -> Unit
 ) {
     val businesses by appState.businesses.collectAsState()
 
@@ -27,7 +31,8 @@ fun BusinessListScreen(
         is Resource.Success -> BusinessListScreenContent(
             businesses = businessesResource.data,
             onEnroll = { appState.enrollToBusiness(it.details.id) },
-            onNavigateToEnrollments = onNavigateToEnrollments
+            onNavigateToEnrollments = onNavigateToEnrollments,
+            onNavigateToProfile = onNavigateToProfile
         )
     }
 }
@@ -36,7 +41,8 @@ fun BusinessListScreen(
 fun BusinessListScreenContent(
     businesses: List<BusinessDetailsWithRewards> = emptyList(),
     onEnroll: (BusinessDetailsWithRewards) -> Unit = { },
-    onNavigateToEnrollments: () -> Unit = { }
+    onNavigateToEnrollments: () -> Unit = { },
+    onNavigateToProfile: () -> Unit = { }
 ) {
     Column(
         modifier = Modifier
@@ -48,12 +54,23 @@ fun BusinessListScreenContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            IconButton(onClick = onNavigateToProfile) {
+                Icon(
+                    Icons.Default.Person,
+                    contentDescription = "Profile",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
             Text(
                 "Businesses",
                 style = MaterialTheme.typography.headlineMedium
             )
-            Button(onClick = onNavigateToEnrollments) {
-                Text("My Enrollments")
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(onClick = onNavigateToEnrollments) {
+                    Text("My Points")
+                }
             }
         }
 
@@ -115,7 +132,7 @@ private fun BusinessCard(
 @Preview(showBackground = true)
 @Composable
 fun BusinessListScreenPreview() {
-    MaterialTheme {
+    EcommerceAppTheme {
         BusinessListScreenContent(
             businesses = listOf(
                 BusinessDetailsWithRewards(

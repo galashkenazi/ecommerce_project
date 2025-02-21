@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.ecommerceapp.data.api.models.BusinessDetails
 import com.example.ecommerceapp.ui.AppState
+import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 import com.example.ecommerceapp.util.Resource
 
 @Composable
@@ -149,7 +150,7 @@ fun BusinessSettingsScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun BusinessSettingsScreenPreview() {
-    MaterialTheme {
+    EcommerceAppTheme {
         BusinessSettingsScreenContent(
             businessDetails = BusinessDetails(
                 id = "1",

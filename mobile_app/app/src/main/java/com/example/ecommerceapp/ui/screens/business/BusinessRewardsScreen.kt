@@ -35,6 +35,7 @@ import com.example.ecommerceapp.data.api.models.CreateRewardRequest
 import com.example.ecommerceapp.data.api.models.Reward
 import com.example.ecommerceapp.ui.AppState
 import com.example.ecommerceapp.ui.screens.business.dialogs.CreateRewardDialog
+import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 import com.example.ecommerceapp.util.Resource
 import java.math.BigDecimal
 
@@ -162,7 +163,7 @@ private fun RewardCard(
 @Preview(showBackground = true)
 @Composable
 fun BusinessRewardsScreenPreview() {
-    MaterialTheme {
+    EcommerceAppTheme {
         BusinessRewardsScreenContent(
             businessName = "Sample Business",
             rewards = listOf(
