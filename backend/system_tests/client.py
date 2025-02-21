@@ -12,7 +12,7 @@ import requests
 import uuid
 
 class TestConfig:
-    BASE_URL = "http://app_backend:5000"
+    BASE_URL = "http://app_backend:5013"
 
 class AppBackendRequester:
     def __init__(self, base_url: str):

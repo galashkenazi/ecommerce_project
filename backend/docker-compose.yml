@@ -16,7 +16,7 @@ services:
   app_backend:
     build: .
     ports:
-      - "5000:5000"
+      - "5013:5013"
     environment:
       DATABASE_URL: postgresql://ecommerce_app:ecommerce_app_pass@db:5432/ecommerce_app_db
       JWT_SECRET_KEY: 8f42a73e2c5f4c1b9d6e8a0f3b7c9d1e4a5f8b2c6d9e0a3f7b4c1d8e5a2f9b6

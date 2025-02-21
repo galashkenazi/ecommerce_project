@@ -130,3 +130,4 @@ class RedeemRewardResponse(BaseModel):
 class BusinessWithRewards(BaseModel):
     details: BusinessDetailsModel
     rewards: List[RewardModel]
+    similar_businesses: List[BusinessDetailsModel] = []

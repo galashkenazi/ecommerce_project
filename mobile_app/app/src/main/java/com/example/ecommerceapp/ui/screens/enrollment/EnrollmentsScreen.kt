@@ -81,24 +81,41 @@ private fun EnrollmentCard(
     onUnenroll: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
-            Text(
-                text = enrollment.business.businessName,
-                style = MaterialTheme.typography.titleLarge
-            )
-            Text(
-                text = "Points: ${enrollment.enrollment.points}",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Button(
-                onClick = onUnenroll,
-                modifier = Modifier.align(Alignment.End)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Unenroll")
+                Column {
+                    Text(
+                        text = enrollment.business.businessName,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Points: ${enrollment.enrollment.points}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                FilledTonalButton(
+                    onClick = onUnenroll,
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                ) {
+                    Text("Unenroll")
+                }
             }
         }
     }

@@ -49,7 +49,7 @@ fun BusinessListScreenContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "Available Businesses",
+                "Businesses",
                 style = MaterialTheme.typography.headlineMedium
             )
             Button(onClick = onNavigateToEnrollments) {
@@ -95,6 +95,13 @@ private fun BusinessCard(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+            if (business.similarBusinesses.isNotEmpty()) {
+                Text(
+                    text = "Similar Businesses: ${business.similarBusinesses.joinToString(", ") { it.businessName }}",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
             Button(
                 onClick = onEnroll,
                 modifier = Modifier.align(Alignment.End)
@@ -118,7 +125,19 @@ fun BusinessListScreenPreview() {
                         description = "A great local business",
                         emailAddress = "sample@business.com"
                     ),
-                    rewards = emptyList()
+                    rewards = emptyList(),
+                    similarBusinesses = listOf(
+                        BusinessDetails(
+                            id = "2",
+                            businessName = "Similar Shop 1",
+                            emailAddress = "shop1@test.com"
+                        ),
+                        BusinessDetails(
+                            id = "3",
+                            businessName = "Similar Shop 2",
+                            emailAddress = "shop2@test.com"
+                        )
+                    )
                 )
             )
         )

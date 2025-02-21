@@ -13,17 +13,23 @@ from src.api_schemas import (
 )
 from src.db.connection import db
 from .auth_middleware import require_business_owner
+from src.services.business_similarity import BusinessSimilarityService
 
 bp = Blueprint('businesses', __name__, url_prefix='/businesses')
+
+similarity_service = BusinessSimilarityService()
 
 @bp.route('', methods=['GET'])
 def list_businesses():
     print(f"Fetching all businesses")
     current_app.logger.warning(f"Fetching all businesses")
     businesses = BusinessDetails.query.all()
+    enrollments = Enrollment.query.all()
     print(f"Found {len(businesses)} businesses")
     result = []
+    
     for business in businesses:
+        similar_businesses = similarity_service.get_similar_businesses(business.id, businesses, enrollments)
         response = BusinessWithRewards(
             details=BusinessDetailsModel(
                 id=business.id,
@@ -40,7 +46,15 @@ def list_businesses():
                 usage_count=reward.usage_count,
                 description=reward.description,
                 required_points=reward.required_points,
-            ) for reward in business.rewards]
+            ) for reward in business.rewards],
+            similar_businesses=[BusinessDetailsModel(
+                id=b.id,
+                business_name=b.business_name,
+                description=b.description,
+                email_address=b.email_address,
+                address=b.address,
+                phone_number=b.phone_number
+            ) for b in similar_businesses]
         )
         result.append(response.model_dump())
     
