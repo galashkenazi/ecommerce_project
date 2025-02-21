@@ -1,14 +1,17 @@
 from src.routes.auth_middleware import require_auth
 from src.config import Config
 from flask import Blueprint, g, request, jsonify
-from src.db.models import User, BlacklistedToken
+from src.db.models import Enrollment, User, BlacklistedToken, BusinessDetails
 from src.api_schemas import CreateUserRequest, LoginUserRequest, TokenResponse, UserModel
 from src.db.connection import db
 from passlib.hash import pbkdf2_sha256
 from jose import jwt
 import datetime
+from src.services.business_recommendation import BusinessRecommendationService
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+business_recommendation_service = BusinessRecommendationService()
 
 @bp.route('/register', methods=['POST'])
 def register():
@@ -66,12 +69,25 @@ def logout():
 def get_current_user_details():
     print(f"Getting current user details")
     user = User.query.filter_by(id=g.user.id).first()
-    return UserModel(
+    
+    user_enrollments = Enrollment.query.filter_by(user_id=g.user.id).all()
+    user_businesses = [enrollment.business for enrollment in user_enrollments]
+    all_businesses = BusinessDetails.query.all()
+
+    response = UserModel(
         id=user.id,
         username=user.username,
         email_address=user.email_address,
         is_business_owner=user.is_business_owner,
-    ).model_dump()
+    )
+
+    if user_businesses and all_businesses:
+        response.recommendations = business_recommendation_service.get_recommendations(
+            user_businesses, 
+            all_businesses
+        )
+
+    return response.model_dump()
 
 def _create_access_token(user_id: str) -> str:
     expire = datetime.datetime.utcnow() + datetime.timedelta(hours=1)

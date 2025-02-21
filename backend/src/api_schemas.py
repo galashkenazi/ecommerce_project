@@ -81,11 +81,18 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
 
+class BusinessRecommendation(BaseModel):
+    business_name: str
+    reward: RewardModel
+
+
+
 class UserModel(BaseModel):
     id: UUID4
     username: str
     email_address: str
     is_business_owner: bool
+    recommendations: Optional[List[BusinessRecommendation]] = None  
 
 
 class EnrollmentModel(BaseModel):

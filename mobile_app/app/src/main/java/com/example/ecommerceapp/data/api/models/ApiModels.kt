@@ -29,7 +29,8 @@ data class UserModel(
     val id: String,
     val username: String,
     val emailAddress: String,
-    val isBusinessOwner: Boolean
+    val isBusinessOwner: Boolean,
+    val recommendations: List<BusinessRecommendation>? = null
 )
 
 @Serializable
@@ -122,4 +123,10 @@ data class RedeemRewardResponse(
     val success: Boolean,
     @Serializable(with = BigDecimalSerializer::class)
     val newPointsBalance: BigDecimal
+)
+
+@Serializable
+data class BusinessRecommendation(
+    val businessName: String,
+    val reward: Reward
 )

@@ -1,9 +1,11 @@
 package com.example.ecommerceapp.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.ecommerceapp.ui.AppState
 import com.example.ecommerceapp.ui.screens.business.AddPointsScreen
 import com.example.ecommerceapp.ui.screens.business.BusinessListScreen
@@ -67,7 +69,7 @@ fun AppNavigation(appState: AppState) {
                 },
                 onNavigateToProfile = {
                     navController.navigate(NavRoutes.CustomerProfile)
-                }
+                },
             )
         }
 

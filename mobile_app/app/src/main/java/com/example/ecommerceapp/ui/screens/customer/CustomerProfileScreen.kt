@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -30,10 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.ecommerceapp.data.api.models.BusinessRecommendation
+import com.example.ecommerceapp.data.api.models.Reward
 import com.example.ecommerceapp.data.api.models.UserModel
 import com.example.ecommerceapp.ui.AppState
 import com.example.ecommerceapp.ui.theme.EcommerceAppTheme
 import com.example.ecommerceapp.util.Resource
+import java.math.BigDecimal
 
 @Composable
 fun CustomerProfileScreen(
@@ -60,66 +65,89 @@ fun CustomerProfileScreenContent(
     user: UserModel? = null,
     onLogout: () -> Unit = { },
     onNavigateToEnrollments: () -> Unit = { },
-    onNavigateBack: () -> Unit = { }
+    onNavigateBack: () -> Unit = { },
+    onEnrollInBusiness: (String) -> Unit = { }
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onNavigateBack) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-            Text(
-                "Profile",
-                style = MaterialTheme.typography.headlineMedium
-            )
-            IconButton(onClick = onLogout) {
-                Icon(Icons.Default.ExitToApp, contentDescription = "Logout")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp)
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                user?.let {
-                    ProfileField(
-                        label = "Username",
-                        value = it.username
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ProfileField(
-                        label = "Email",
-                        value = it.emailAddress
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ProfileField(
-                        label = "User ID",
-                        value = it.id
-                    )
+                IconButton(onClick = onNavigateBack) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                }
+                Text(
+                    "Profile",
+                    style = MaterialTheme.typography.headlineMedium
+                )
+                IconButton(onClick = onLogout) {
+                    Icon(Icons.Default.ExitToApp, contentDescription = "Logout")
                 }
             }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    user?.let {
+                        ProfileField(
+                            label = "Username",
+                            value = it.username
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        ProfileField(
+                            label = "Email",
+                            value = it.emailAddress
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        ProfileField(
+                            label = "User ID",
+                            value = it.id
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = onNavigateToEnrollments,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("View My Enrollments")
+            }
+
+            if (!user?.recommendations.isNullOrEmpty()) {
+                Spacer(modifier = Modifier.height(32.dp))
+                Text(
+                    "Recommended for You",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = onNavigateToEnrollments,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("View My Enrollments")
+        user?.recommendations?.let { recommendations ->
+            items(recommendations) { recommendation ->
+                RecommendationCard(
+                    recommendation = recommendation,
+                    onEnroll = { onEnrollInBusiness(recommendation.businessName) }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 }
@@ -164,6 +192,49 @@ private fun ProfileField(
     }
 }
 
+@Composable
+private fun RecommendationCard(
+    recommendation: BusinessRecommendation,
+    onEnroll: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = recommendation.businessName,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = recommendation.reward.name,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "${recommendation.reward.requiredPoints} points required",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(
+                onClick = onEnroll,
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text("Enroll")
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CustomerProfileScreenPreview() {
@@ -173,7 +244,31 @@ fun CustomerProfileScreenPreview() {
                 id = "user123",
                 username = "johndoe",
                 emailAddress = "john@example.com",
-                isBusinessOwner = false
+                isBusinessOwner = false,
+                recommendations = listOf(
+                    BusinessRecommendation(
+                        businessName = "Coffee Shop",
+                        reward = Reward(
+                            id = "reward1",
+                            businessId = "business1",
+                            name = "Free Coffee",
+                            description = "Get a free coffee",
+                            requiredPoints = BigDecimal(50),
+                            usageCount = 0
+                        )
+                    ),
+                    BusinessRecommendation(
+                        businessName = "Pizza Place",
+                        reward = Reward(
+                            id = "reward2",
+                            businessId = "business2",
+                            name = "Free Dessert",
+                            description = "Free dessert with any pizza",
+                            requiredPoints = BigDecimal(75),
+                            usageCount = 0
+                        )
+                    )
+                )
             )
         )
     }
